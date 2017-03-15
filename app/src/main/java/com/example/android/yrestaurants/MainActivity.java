@@ -36,19 +36,9 @@ public class MainActivity extends AppCompatActivity {
         // If the user hasn't signed in
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             // Start sign in/sign up activity
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-                                    new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
-                            .setIsSmartLockEnabled(false)
-                            .build(),
-                    SIGN_IN_REQUEST_CODE
-            );
+            startSignInUpActivity();
         } else {
-            // User is already signed in. Therefore, display
-            // a welcome Toast
+            // User is already signed in. Therefore, display a welcome Toast
             userName = FirebaseAuth.getInstance()
                     .getCurrentUser()
                     .getDisplayName();
@@ -61,17 +51,17 @@ public class MainActivity extends AppCompatActivity {
             // Create or refer to each user's firebase database reference
             dbRef = FirebaseDatabase.getInstance()
                     .getReference(FirebaseAuth.getInstance()
-                            .getCurrentUser()
-                            .getUid());
+                    .getCurrentUser()
+                    .getUid());
 
             // Load restaurants contents
-            displayRestaurants();
+            displayFragments();
         }
 
         Log.v(TAG, "*** onCreate() ***");
     }
 
-    private void displayRestaurants(){
+    private void displayFragments(){
         // Find the view pager that will allow the user to swipe between fragments
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
@@ -92,6 +82,19 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    private void startSignInUpActivity(){
+        startActivityForResult(
+            AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                    new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
+                .setIsSmartLockEnabled(false)
+                .build(),
+            SIGN_IN_REQUEST_CODE
+        );
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
@@ -100,15 +103,15 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == SIGN_IN_REQUEST_CODE) {
             if(resultCode == RESULT_OK) {
                 Toast.makeText(this,
-                        "Successfully signed in. Welcome!",
-                        Toast.LENGTH_LONG)
-                        .show();
-                displayRestaurants();
+                    "Successfully signed in. Welcome!",
+                    Toast.LENGTH_LONG)
+                    .show();
+                displayFragments();
             } else {
                 Toast.makeText(this,
-                        "We couldn't sign you in. Please try again later.",
-                        Toast.LENGTH_LONG)
-                        .show();
+                    "We couldn't sign you in. Please try again later.",
+                    Toast.LENGTH_LONG)
+                    .show();
 
                 // Close the app
                 finish();
@@ -136,27 +139,18 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_sign_out) {
             AuthUI.getInstance().signOut(this)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(MainActivity.this,
-                                    "You have been signed out.",
-                                    Toast.LENGTH_LONG)
-                                    .show();
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(MainActivity.this,
+                                "You have been signed out.",
+                                Toast.LENGTH_LONG)
+                                .show();
 
-                            // Start sign in/sign up activity again
-                            startActivityForResult(
-                                    AuthUI.getInstance()
-                                            .createSignInIntentBuilder()
-                                            .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-                                                    new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
-                                            .setIsSmartLockEnabled(false)
-                                            .build(),
-                                    SIGN_IN_REQUEST_CODE
-                            );
-                        }
-                    });
+                        // Start sign in/sign up activity again
+                        startSignInUpActivity();
+                    }
+                });
         }
         return true;
     }
