@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "681934343862",
+    "firebase_url": "https://yrestaurant-b1e58.firebaseio.com",
+    "project_id": "yrestaurant-b1e58",
+    "storage_bucket": "yrestaurant-b1e58.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:681934343862:android:c1aa1ccbdd32fc47",
+        "android_client_info": {
+          "package_name": "com.example.android.yrestaurants"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "681934343862-h2lf9027dptdjtegtbjtj5klt1hvib3l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android.yrestaurants",
+            "certificate_hash": "d4964057bd11f89e4c1e80aeeaceade86f33470c"
+          }
+        },
+        {
+          "client_id": "681934343862-t63prshgncv8sj5i70pm3eo193jdja6a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhzpPJCgg0oOgE1s00WStSAM410ziYeZA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "681934343862-t63prshgncv8sj5i70pm3eo193jdja6a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

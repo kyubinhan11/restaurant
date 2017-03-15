@@ -55,8 +55,6 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
         // Find the ImageView in the list_item.xml layout with the ID image.
         ImageView imageView = (ImageView) listItemView.findViewById(R.id.image_of_restaurant);
 
-//        Log.v("Url is ", currentRest.getImageUrl());
-
         // load the image of restaurant asynchronously
         new ImageDownloader(imageView).execute(currentRest.getImageUrl());
 
@@ -83,7 +81,7 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
             }
             return mIcon;
         }
-
+        // after loading is done set the image in the ImageView
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
         }

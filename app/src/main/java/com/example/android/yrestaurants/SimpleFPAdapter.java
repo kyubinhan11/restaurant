@@ -19,11 +19,13 @@ public class SimpleFPAdapter extends FragmentPagerAdapter {
         mContext = context;
     }
 
+    // Have 2 fragments to show
     @Override
     public int getCount() {
         return 2;
     }
 
+    // Create each fragment associated with the position
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
@@ -34,6 +36,7 @@ public class SimpleFPAdapter extends FragmentPagerAdapter {
         }
     }
 
+    // Get the title names for each tap
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0) {
