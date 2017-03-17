@@ -15,14 +15,35 @@ public class Restaurant {
     /** Rating of the restaurant */
     private int mRating;
 
-    /**
-     *
-     * @param imageUrl is the url for the image
-     * @param nameofRestaurant is the name of the restaurant
-     */
-    public Restaurant(String imageUrl, String nameofRestaurant) {
-        mImageUrl = imageUrl;
-        mNameOfRestaurant = nameofRestaurant;
+    private boolean mIsClosed;
+
+    private String mPhone;
+
+    private String mUrl;
+
+    public Restaurant(String mNameOfRestaurant, String mUrl, String mImageUrl, String mPhone, boolean mIsClosed, int mRating) {
+        this.mImageUrl = mImageUrl;
+        this.mNameOfRestaurant = mNameOfRestaurant;
+        this.mRating = mRating;
+        this.mIsClosed = mIsClosed;
+        this.mPhone = mPhone;
+        this.mUrl = mUrl;
+    }
+
+    public int getRating() {
+        return mRating;
+    }
+
+    public boolean isIsClosed() {
+        return mIsClosed;
+    }
+
+    public String getPhone() {
+        return mPhone;
+    }
+
+    public String getUrl() {
+        return mUrl;
     }
 
     public String getImageUrl() {
@@ -33,4 +54,15 @@ public class Restaurant {
         return mNameOfRestaurant;
     }
 
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "mImageUrl='" + mImageUrl + '\'' +
+                ", mNameOfRestaurant='" + mNameOfRestaurant + '\'' +
+                ", mRating=" + mRating +
+                ", mIsClosed=" + mIsClosed +
+                ", mPhone='" + mPhone + '\'' +
+                ", mUrl='" + mUrl + '\'' +
+                '}';
+    }
 }

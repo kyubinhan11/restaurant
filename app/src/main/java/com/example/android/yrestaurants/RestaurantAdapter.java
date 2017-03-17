@@ -64,10 +64,10 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
 
     // a class for loading an image asynchronously
     class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
+        ImageView imageView;
 
-        public ImageDownloader(ImageView bmImage) {
-            this.bmImage = bmImage;
+        public ImageDownloader(ImageView imageView) {
+            this.imageView = imageView;
         }
 
         protected Bitmap doInBackground(String... urls) {
@@ -83,7 +83,7 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
         }
         // after loading is done set the image in the ImageView
         protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
+            imageView.setImageBitmap(result);
         }
     }
 
