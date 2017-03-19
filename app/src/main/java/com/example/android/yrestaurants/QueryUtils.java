@@ -18,7 +18,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.radius;
 
 /**
  * Created by Kevin on 3/16/2017.
@@ -183,7 +182,7 @@ public class QueryUtils {
             }
 
         } catch (JSONException e) {
-            Log.e("QueryUtils", "Problem parsing the restaurant JSON results", e);
+            Log.e(LOG_TAG, "Problem parsing the restaurant JSON results", e);
         }
 
         // Return the list of restaurants

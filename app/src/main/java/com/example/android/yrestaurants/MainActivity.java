@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         // If the user hasn't signed in
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             // Start sign in/sign up activity
-            startSignInUpActivity();
+            startSignInOrUpActivity();
         } else {
             // User is already signed in. Therefore, display a welcome Toast
             userName = FirebaseAuth.getInstance()
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    private void startSignInUpActivity(){
+    private void startSignInOrUpActivity(){
         startActivityForResult(
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                                 .show();
 
                         // Start sign in/sign up activity again
-                        startSignInUpActivity();
+                        startSignInOrUpActivity();
                     }
                 });
         }

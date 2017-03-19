@@ -14,6 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -23,6 +26,8 @@ import java.util.ArrayList;
 
 public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
 
+    private ImageLoader imageLoader;
+    private DisplayImageOptions options;
     /**
      *
      * @param context is the current context that the adapter is being created in.
@@ -30,6 +35,13 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
      */
     public RestaurantAdapter(Context context, ArrayList<Restaurant> restaurants) {
         super(context, 0, restaurants);
+        imageLoader = ImageLoader.getInstance(); // Get singleton instance
+        // Universal Image Loader option for loaded images to be cached in memory and/or on disk
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+
     }
 
 
@@ -46,45 +58,22 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
         // Get the Restaurant object located at this position in the list
         Restaurant currentRest = getItem(position);
 
-
         // Find the TextView in the list_item.xml layout with the ID name_of_restaurant.
         TextView nameTextView = (TextView) listItemView.findViewById(R.id.name_of_restaurant);
+
         // Get the name of restaurant from the currentRest object
         nameTextView.setText(currentRest.getNameOfRestaurant());
 
         // Find the ImageView in the list_item.xml layout with the ID image.
         ImageView imageView = (ImageView) listItemView.findViewById(R.id.image_of_restaurant);
 
-        // load the image of restaurant asynchronously
-        new ImageDownloader(imageView).execute(currentRest.getImageUrl());
+        // Load image, decode it to Bitmap and display Bitmap in ImageView
+        ImageLoader.getInstance().displayImage(currentRest.getImageUrl(), imageView, options);
 
         // Return the whole list item layout
         return listItemView;
     }
 
-    // a class for loading an image asynchronously
-    class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
-        ImageView imageView;
 
-        public ImageDownloader(ImageView imageView) {
-            this.imageView = imageView;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String url = urls[0];
-            Bitmap mIcon = null;
-            try {
-                InputStream in = new java.net.URL(url).openStream();
-                mIcon = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-            }
-            return mIcon;
-        }
-        // after loading is done set the image in the ImageView
-        protected void onPostExecute(Bitmap result) {
-            imageView.setImageBitmap(result);
-        }
-    }
 
 }

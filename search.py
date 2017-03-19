@@ -17,7 +17,6 @@ def get_label(radius):
     r = requests.request('GET', url, headers=headers, params=url_params)
 
     dic_label = r.json()
-    #text = dic_label.values()[0]
     print dic_label
 
 
