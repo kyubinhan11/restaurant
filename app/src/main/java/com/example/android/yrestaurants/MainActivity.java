@@ -1,8 +1,11 @@
 package com.example.android.yrestaurants;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.Manifest;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,8 +26,9 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private final String TAG = MainActivity.this.getClass().getSimpleName();
     private static final int SIGN_IN_REQUEST_CODE = 1;
+    private static final int LOCATION_PERMISSION_REQUEST = 2;
     private String userName;
     private DatabaseReference dbRef;
 
@@ -56,6 +61,16 @@ public class MainActivity extends AppCompatActivity {
 
             // Load restaurants contents
             displayFragments();
+        }
+
+        // Request the location services permission
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST);
+
         }
 
         Log.v(TAG, "*** onCreate() ***");
@@ -102,16 +117,13 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == SIGN_IN_REQUEST_CODE) {
             if(resultCode == RESULT_OK) {
-                Toast.makeText(this,
-                    "Successfully signed in. Welcome!",
-                    Toast.LENGTH_LONG)
-                    .show();
+                Toast.makeText(this, "Successfully signed in. Welcome!",
+                        Toast.LENGTH_LONG).show();
+
                 displayFragments();
             } else {
-                Toast.makeText(this,
-                    "We couldn't sign you in. Please try again later.",
-                    Toast.LENGTH_LONG)
-                    .show();
+                Toast.makeText(this, "We couldn't sign you in. Please try again later.",
+                        Toast.LENGTH_LONG).show();
 
                 // Close the app
                 finish();
@@ -121,9 +133,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case LOCATION_PERMISSION_REQUEST: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted,
+
+                } else {
+                    // permission denied. We can't get any restaurats feed back without the location value
+                    // so let's just finish the app.
+                    Toast.makeText(MainActivity.this,
+                            "Sorry, the app requires the location permission", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+
+        }
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-
         Log.v(TAG, "*** onStop() ***");
     }
 

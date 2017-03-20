@@ -156,26 +156,21 @@ public class QueryUtils {
                 // Get a single restaurant at position i within the list of businesses
                 JSONObject currentRestaurant = businessesArray.getJSONObject(i);
 
-                // Extract the value for the key called "rating"
+                // Extract the value for the key called "rating" "phone" etc...
                 int rating = currentRestaurant.getInt("rating");
-
-                // Extract the value for the key called "phone"
                 String phone = currentRestaurant.getString("phone");
-
-                // Extract the value for the key called "name"
                 String name = currentRestaurant.getString("name");
-
-                // Extract the value for the key called "is_closed"
-                boolean is_closed = currentRestaurant.getBoolean("is_closed");
-
-                // Extract the value for the key called "url"
+                String price = currentRestaurant.getString("price");
                 String url = currentRestaurant.getString("url");
-
-                // Extract the value for the key called "image_url"
                 String image_url = currentRestaurant.getString("image_url");
+                boolean is_closed = currentRestaurant.getBoolean("is_closed");
+                int reviewCount = currentRestaurant.getInt("review_count");
+                int distance = currentRestaurant.getInt("distance");
+
 
                 // Create a new {@link restaurant} object
-                Restaurant restaurant = new Restaurant(name, url, image_url, phone, is_closed, rating);
+                Restaurant restaurant = new Restaurant(name, url, image_url, phone,
+                        is_closed, rating, reviewCount, distance, price);
 
                 // Add the new {@link restaurant} to the list of restaurants.
                 restaurants.add(restaurant);

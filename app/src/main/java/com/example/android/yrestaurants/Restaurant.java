@@ -21,20 +21,42 @@ public class Restaurant {
 
     private String mUrl;
 
-    public Restaurant(String mNameOfRestaurant, String mUrl, String mImageUrl, String mPhone, boolean mIsClosed, int mRating) {
+    private int mReviewCount;
+
+    private int mDistance;
+
+    private String mPrice;
+
+    public Restaurant(String mNameOfRestaurant, String mUrl, String mImageUrl,
+                      String mPhone, boolean mIsClosed, int mRating, int mReviewCount, int mDistance, String mPrice) {
         this.mImageUrl = mImageUrl;
         this.mNameOfRestaurant = mNameOfRestaurant;
         this.mRating = mRating;
         this.mIsClosed = mIsClosed;
         this.mPhone = mPhone;
         this.mUrl = mUrl;
+        this.mReviewCount = mReviewCount;
+        this.mDistance = mDistance;
+        this.mPrice = mPrice;
+    }
+
+    public int getReviewCount() {
+        return mReviewCount;
+    }
+
+    public int getDistance() {
+        return mDistance;
+    }
+
+    public String getPrice() {
+        return mPrice;
     }
 
     public int getRating() {
         return mRating;
     }
 
-    public boolean isIsClosed() {
+    public boolean isClosed() {
         return mIsClosed;
     }
 
