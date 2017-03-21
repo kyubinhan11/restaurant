@@ -43,14 +43,14 @@ public class RestaurantsFragment extends Fragment implements
 
     private final static String TAG = "RestaurantFragment";
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private static int countConnected = 0;
+    private RestaurantAdapter adapter;
+    private Location location;
+    private GoogleApiClient mGoogleApiClient;
 
     public RestaurantsFragment() {
         // Required empty public constructor
     }
-
-    private RestaurantAdapter adapter;
-    private Location location;
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,7 +58,10 @@ public class RestaurantsFragment extends Fragment implements
 
         View rootView = inflater.inflate(R.layout.restaurant_list, container, false);
 
-        // initialize ImageLoader to use Universal Image Loader in RestaurantAdapter
+        // Reset the counter every time the fragment is created
+        countConnected = 0;
+
+        // Initialize ImageLoader to use Universal Image Loader in RestaurantAdapter
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(getActivity()));
 
         // Create an instance of GoogleAPIClient.
@@ -73,7 +76,7 @@ public class RestaurantsFragment extends Fragment implements
         // Create an RestaurantAdapter, whose data source is a list of restaurants. The
         // adapter knows how to create list items for each item in the list.
         // the list will be filled after the user's location is obtained by Google Play Services (look at onConnected)
-        adapter = new RestaurantAdapter(getActivity(), new ArrayList<Restaurant>());
+        adapter = new RestaurantAdapter(getActivity(), ((MainActivity) getActivity()).getUid() ,new ArrayList<Restaurant>());
 
         // Find the ListView object in the view hierarchy of the link Activity.
         // the Listview is declared in the restaurant_list.xml layout file.
@@ -86,18 +89,23 @@ public class RestaurantsFragment extends Fragment implements
         return rootView;
     }
 
-    /* the required methods for GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener */
+    /* The required methods for GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener */
+    // onConnected is called every time onResume() gets called which is kinda annoying
+    // because I only want to execute the AsyncTask once. Having a counter can avoid this issue.
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.i(TAG, "Location services connected.");
+        // increment countConnected by 1 when onConnected is called
+        countConnected++;
+        Log.i(TAG, Integer.toString(countConnected)+ " times Location services connected.");
         // Beginning in Android 6.0 (API level 23), users grant permissions to apps
         // while the app is running, not when they install the app.
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
 
-        if (location != null) {
+        // Fetch the data only once
+        if (location != null && countConnected == 1) {
             // update restauraut feeds every time the application resumes
             RestaurantAsyncTask task = new RestaurantAsyncTask();
             // Start an AsyncTask to fetch restaurant feeds
@@ -124,7 +132,7 @@ public class RestaurantsFragment extends Fragment implements
             Log.i(TAG, "Location services connection failed with code " + connectionResult.getErrorCode());
         }
     }
-    /* end of required methods for GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener*/
+    /* End of required methods for GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener*/
 
     @Override
     public void onResume() {
@@ -150,7 +158,7 @@ public class RestaurantsFragment extends Fragment implements
                 return null;
             }
 
-            // get the restaurant feeds from Yelp API
+            // Get the restaurant feeds from Yelp API
             List<Restaurant> result = QueryUtils.fetchRestaurantData(urls[0]);
             return result;
         }

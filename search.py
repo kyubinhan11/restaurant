@@ -8,8 +8,8 @@ def get_label(radius):
     bearer_token = "FxUGHPWV1OvUnkx_x9aHc5fZHGD2L7-9qOUgftzrvqv2rnI_EpFflVb3yJNaKTQ8cIltpIJHgBU-PPH8suWYL1tEpaqDUcpFnVu6_w_E5aRClAXQ9lYQVyWdmKvIWHYx";
     url_params = {
             'radius': radius,
-            'latitude': '49.24',
-            'longitude': '-122.98'}
+            'latitude': '48.4284',
+            'longitude': '-123.365'}
     headers = {
         'Authorization': 'Bearer %s' % bearer_token,
     }

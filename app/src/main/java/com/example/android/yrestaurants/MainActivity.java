@@ -19,18 +19,23 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String TAG = MainActivity.this.getClass().getSimpleName();
+    private final String TAG = "MainActivity";
     private static final int SIGN_IN_REQUEST_CODE = 1;
     private static final int LOCATION_PERMISSION_REQUEST = 2;
-    private String userName;
-    private DatabaseReference dbRef;
+    private DatabaseReference userDBRef;
+    private String uid;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,20 +49,21 @@ public class MainActivity extends AppCompatActivity {
             startSignInOrUpActivity();
         } else {
             // User is already signed in. Therefore, display a welcome Toast
-            userName = FirebaseAuth.getInstance()
-                    .getCurrentUser()
-                    .getDisplayName();
 
             Toast.makeText(this,
-                    "Welcome " + userName +"!",
+                    "Welcome " + FirebaseAuth.getInstance()
+                            .getCurrentUser()
+                            .getDisplayName() +"!",
                     Toast.LENGTH_LONG)
                     .show();
 
-            // Create or refer to each user's firebase database reference
-            dbRef = FirebaseDatabase.getInstance()
-                    .getReference(FirebaseAuth.getInstance()
+            uid = FirebaseAuth.getInstance()
                     .getCurrentUser()
-                    .getUid());
+                    .getUid();
+
+            // Create or refer to each user's firebase database reference
+            userDBRef = FirebaseDatabase.getInstance()
+                    .getReference(uid);
 
             // Load restaurants contents
             displayFragments();
@@ -68,12 +74,17 @@ public class MainActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     LOCATION_PERMISSION_REQUEST);
 
         }
 
         Log.v(TAG, "*** onCreate() ***");
+    }
+
+    // public getter methods for the fragments
+    public String getUid(){
+        return uid;
     }
 
     private void displayFragments(){
@@ -108,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 .build(),
             SIGN_IN_REQUEST_CODE
         );
+
     }
 
     @Override
@@ -119,6 +131,14 @@ public class MainActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK) {
                 Toast.makeText(this, "Successfully signed in. Welcome!",
                         Toast.LENGTH_LONG).show();
+
+                uid = FirebaseAuth.getInstance()
+                        .getCurrentUser()
+                        .getUid();
+
+                // Create or refer to each user's firebase database reference
+                userDBRef = FirebaseDatabase.getInstance()
+                        .getReference(uid);
 
                 displayFragments();
             } else {
@@ -156,6 +176,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Log.v(TAG, "*** onStop() ***");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG, "*** onDestroy() ***");
     }
 
     // Instantiate the menu resource

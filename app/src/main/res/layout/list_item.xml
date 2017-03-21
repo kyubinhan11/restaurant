@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/whole_layout_list_item"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_item_height"
     android:orientation="horizontal"
@@ -9,7 +8,7 @@
 
     <ImageView
         android:id="@+id/image_list_item"
-        android:layout_width="100dp"
+        android:layout_width="90dp"
         android:layout_height="@dimen/list_item_height"/>
 
     <RelativeLayout
@@ -39,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/name_list_item"
-            android:layout_toRightOf="@id/rating_list_item"
+            android:layout_toEndOf="@id/rating_list_item"
             tools:text="133 reviews"/>
 
         <TextView
@@ -49,27 +48,9 @@
             android:layout_below="@id/review_count_list_item"
             tools:text="$$"/>
 
-        <TextView
-            android:id="@+id/is_open_list_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/review_count_list_item"
-            android:layout_toRightOf="@id/rating_list_item"
-            android:textColor="@color/com_facebook_blue"
-            android:visibility="invisible"
-            android:text="Currently Open"
-            tools:text="Open"/>
 
-        <TextView
-            android:id="@+id/is_closed_list_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/review_count_list_item"
-            android:layout_toRightOf="@id/rating_list_item"
-            android:textColor="@color/tw__composer_red"
-            android:visibility="invisible"
-            android:text="Currently Closed"
-            tools:text="Open"/>
+
+
 
     </RelativeLayout>
 

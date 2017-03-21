@@ -1,6 +1,8 @@
 package com.example.android.yrestaurants;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.process.BitmapProcessor;
 
 import java.util.ArrayList;
 
@@ -24,19 +27,33 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
 
     private ImageLoader imageLoader;
     private DisplayImageOptions options;
+    private Context context;
+    private String uid;
 
     /**
      *
      * @param context is the current context that the adapter is being created in.
+     * @param uid is the current user's id for a reference in Firebase database
      * @param restaurants is the list of restaurants to be displayed
      */
-    public RestaurantAdapter(Context context, ArrayList<Restaurant> restaurants) {
+
+     public RestaurantAdapter(Context context, String uid, ArrayList<Restaurant> restaurants) {
         super(context, 0, restaurants);
-        imageLoader = ImageLoader.getInstance(); // Get singleton instance
-        // set options in Universal Image Loader for loaded images to be cached in memory and/or on disk
-        options = new DisplayImageOptions.Builder()
+        this.context = context;
+        this.uid = uid;
+        this.imageLoader = ImageLoader.getInstance();
+
+        // Set options in Universal Image Loader for loaded images to be cached in memory and/or on disk
+        this.options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
+                .postProcessor(new BitmapProcessor() {
+                    // set the size of images to make them fit nicely in the list view
+                    @Override
+                    public Bitmap process(Bitmap bmp) {
+                        return Bitmap.createScaledBitmap(bmp, 350, 300, false);
+                    }
+                })
                 .build();
 
     }
@@ -53,7 +70,7 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
         }
 
         // Get the Restaurant object located at this position in the list
-        Restaurant currentRest = getItem(position);
+        final Restaurant currentRest = getItem(position);
 
         // Find the 'name' TextView in the list_item.xml layout.
         TextView nameTV = (TextView) listItemView.findViewById(R.id.name_list_item);
@@ -81,14 +98,22 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
         String priceStr = "Price: " + currentRest.getPrice();
         priceTV.setText(priceStr);
 
-        // Find the 'isOpen' TextView in the list_item.xml layout.
-        TextView openTV = (TextView) listItemView.findViewById(R.id.is_open_list_item);
-        if(currentRest.isClosed()) openTV.setVisibility(View.VISIBLE);
+        // listItemView is a LinearLayout which is the root layout of the list_item.xml
+        listItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, DetailRestaurantActivity.class);
 
-        // Find the 'isClosed' TextView in the list_item.xml layout.
-        TextView closedTV = (TextView) listItemView.findViewById(R.id.is_closed_list_item);
-        if(!currentRest.isClosed()) closedTV.setVisibility(View.VISIBLE);
+                // Restaurant class implements parcelable interface
+                intent.putExtra("restaurant", currentRest);
 
+                // pass the current user id to DetailRestaurantActivity
+                intent.putExtra("uid", uid);
+
+                // start DetailRestaurantActivity with the currentRest object and uid!
+                context.startActivity(intent);
+            }
+        });
 
         // Return the whole list item layout
         return listItemView;

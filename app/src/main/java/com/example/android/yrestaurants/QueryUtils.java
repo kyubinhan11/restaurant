@@ -163,6 +163,7 @@ public class QueryUtils {
                 String price = currentRestaurant.getString("price");
                 String url = currentRestaurant.getString("url");
                 String image_url = currentRestaurant.getString("image_url");
+                String id = currentRestaurant.getString("id");
                 boolean is_closed = currentRestaurant.getBoolean("is_closed");
                 int reviewCount = currentRestaurant.getInt("review_count");
                 int distance = currentRestaurant.getInt("distance");
@@ -170,14 +171,14 @@ public class QueryUtils {
 
                 // Create a new {@link restaurant} object
                 Restaurant restaurant = new Restaurant(name, url, image_url, phone,
-                        is_closed, rating, reviewCount, distance, price);
+                        is_closed, rating, reviewCount, distance, price, id);
 
                 // Add the new {@link restaurant} to the list of restaurants.
                 restaurants.add(restaurant);
             }
 
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Problem parsing the restaurant JSON results", e);
+//            Log.e(LOG_TAG, "Problem parsing the restaurant JSON results", e);
         }
 
         // Return the list of restaurants
