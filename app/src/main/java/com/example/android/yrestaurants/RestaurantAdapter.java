@@ -20,7 +20,7 @@ import com.nostra13.universalimageloader.core.process.BitmapProcessor;
 import java.util.ArrayList;
 
 /**
- * Created by Kevin on 3/13/2017.
+ *  ArrayAdapter for RestaurantsFragment.java
  */
 
 public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
@@ -70,33 +70,37 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
         }
 
         // Get the Restaurant object located at this position in the list
-        final Restaurant currentRest = getItem(position);
+        final Restaurant currRest = getItem(position);
 
         // Find the 'name' TextView in the list_item.xml layout.
         TextView nameTV = (TextView) listItemView.findViewById(R.id.name_list_item);
 
         // Get the name of restaurant from the currentRest object
-        nameTV.setText(currentRest.getNameOfRestaurant());
+        nameTV.setText(currRest.getNameOfRestaurant());
 
         // Find the ImageView in the list_item.xml layout with the ID image.
         ImageView imageView = (ImageView) listItemView.findViewById(R.id.image_list_item);
 
         // Load image, decode it to Bitmap and display Bitmap in ImageView
-        imageLoader.displayImage(currentRest.getImageUrl(), imageView, options);
+        imageLoader.displayImage(currRest.getImageUrl(), imageView, options);
 
         // Find the 'rating' RatingBar in the list_item.xml layout and set the rating
         RatingBar ratingBar = (RatingBar) listItemView.findViewById(R.id.rating_list_item);
-        ratingBar.setRating(currentRest.getRating());
+        ratingBar.setRating(currRest.getRating());
 
         // Find the 'reviewCount' TextView in the list_item.xml layout and set the review counts
         TextView reviewCountTV = (TextView) listItemView.findViewById(R.id.review_count_list_item);
-        String reviewCountStr = " " + currentRest.getReviewCount()+ " reviews";
+        String reviewCountStr = " " + currRest.getReviewCount()+ " reviews";
         reviewCountTV.setText(reviewCountStr);
 
         // Find the 'price' TextView in the list_item.xml layout and set the price
         TextView priceTV = (TextView) listItemView.findViewById(R.id.price_list_item);
-        String priceStr = "Price: " + currentRest.getPrice();
+        String priceStr = "Price: " + currRest.getPrice();
         priceTV.setText(priceStr);
+
+        TextView distanceTV = (TextView) listItemView.findViewById(R.id.distance_list_item);
+        String distanceStr = Double.toString(currRest.getDistance()/1000.0) + "km away";
+        distanceTV.setText(distanceStr);
 
         // listItemView is a LinearLayout which is the root layout of the list_item.xml
         listItemView.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +109,7 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
                 Intent intent = new Intent(context, DetailRestaurantActivity.class);
 
                 // Restaurant class implements parcelable interface
-                intent.putExtra("restaurant", currentRest);
+                intent.putExtra("restaurant", currRest);
 
                 // pass the current user id to DetailRestaurantActivity
                 intent.putExtra("uid", uid);

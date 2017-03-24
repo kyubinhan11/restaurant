@@ -5,36 +5,24 @@ import android.os.Parcelable;
 
 public class Restaurant implements Parcelable {
 
-    /** Image resource ID for the restaurant */
+    /** Restaurant's info */
     private String mImageUrl;
-
-    /** Name of the restaurant */
     private String mNameOfRestaurant;
-
-    /** Rating of the restaurant */
-    private int mRating;
-
-    private boolean mIsClosed;
-
-    private String mPhone;
-
-    private String mUrl;
-
-    private int mReviewCount;
-
-    private int mDistance;
-
-
     private String mPrice;
-
-    private String mId;
+    private String mYId;
+    private String mPhone;
+    private String mUrl;
+    private int mReviewCount;
+    private int mDistance;
+    private int mRating;
+    private boolean mIsClosed;
 
     public Restaurant(){
         // Default constructor required for calls to DataSnapshot.getValue(Restaurant.class)
     }
 
     public Restaurant(String mNameOfRestaurant, String mUrl, String mImageUrl,
-                      String mPhone, boolean mIsClosed, int mRating, int mReviewCount, int mDistance, String mPrice, String mId) {
+                      String mPhone, boolean mIsClosed, int mRating, int mReviewCount, int mDistance, String mPrice, String mYId) {
         this.mImageUrl = mImageUrl;
         this.mNameOfRestaurant = mNameOfRestaurant;
         this.mRating = mRating;
@@ -44,12 +32,13 @@ public class Restaurant implements Parcelable {
         this.mReviewCount = mReviewCount;
         this.mDistance = mDistance;
         this.mPrice = mPrice;
-        this.mId = mId;
+        this.mYId = mYId;
 
     }
 
-    public String getId() {
-        return mId;
+    /* Getters methods*/
+    public String getYId() {
+        return mYId;
     }
 
     public int getReviewCount() {
@@ -87,6 +76,7 @@ public class Restaurant implements Parcelable {
     public String getNameOfRestaurant(){
         return mNameOfRestaurant;
     }
+    /* End of getters methods*/
 
     /* Setters are needed for DataSnapshot.getValue(Restaurant.class) */
     public void setImageUrl(String mImageUrl) {
@@ -125,11 +115,13 @@ public class Restaurant implements Parcelable {
         this.mPrice = mPrice;
     }
 
-    public void setId(String mId) {
-        this.mId = mId;
+    public void setYId(String mYId) {
+        this.mYId = mYId;
     }
+    /* End of setters methods*/
 
-    /* following methods were created by http://www.parcelabler.com/
+
+    /* Following methods were created by http://www.parcelabler.com/
     *  to make this class parcelable
     */
     protected Restaurant(Parcel in) {
@@ -142,7 +134,7 @@ public class Restaurant implements Parcelable {
         mReviewCount = in.readInt();
         mDistance = in.readInt();
         mPrice = in.readString();
-        mId = in.readString();
+        mYId = in.readString();
     }
 
     @Override
@@ -161,7 +153,7 @@ public class Restaurant implements Parcelable {
         dest.writeInt(mReviewCount);
         dest.writeInt(mDistance);
         dest.writeString(mPrice);
-        dest.writeString(mId);
+        dest.writeString(mYId);
     }
 
     @SuppressWarnings("unused")

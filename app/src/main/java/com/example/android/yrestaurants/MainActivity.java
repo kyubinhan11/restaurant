@@ -19,14 +19,10 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
-import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -132,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Successfully signed in. Welcome!",
                         Toast.LENGTH_LONG).show();
 
+                // Update user's reference to Firebase
                 uid = FirebaseAuth.getInstance()
                         .getCurrentUser()
                         .getUid();

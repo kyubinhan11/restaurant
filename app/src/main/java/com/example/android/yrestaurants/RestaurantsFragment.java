@@ -33,8 +33,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -43,10 +41,12 @@ public class RestaurantsFragment extends Fragment implements
 
     private final static String TAG = "RestaurantFragment";
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private static final String radius = "10000";
     private static int countConnected = 0;
     private RestaurantAdapter adapter;
     private Location location;
     private GoogleApiClient mGoogleApiClient;
+
 
     public RestaurantsFragment() {
         // Required empty public constructor
@@ -110,7 +110,7 @@ public class RestaurantsFragment extends Fragment implements
             RestaurantAsyncTask task = new RestaurantAsyncTask();
             // Start an AsyncTask to fetch restaurant feeds
             task.execute("https://api.yelp.com/v3/businesses/search?latitude="+ location.getLatitude()+
-                    "&longitude=" + location.getLongitude() + "&radius=10000");
+                    "&longitude=" + location.getLongitude() + "&radius=" + radius);
         }
     }
 

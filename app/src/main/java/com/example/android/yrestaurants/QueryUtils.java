@@ -178,7 +178,7 @@ public class QueryUtils {
             }
 
         } catch (JSONException e) {
-//            Log.e(LOG_TAG, "Problem parsing the restaurant JSON results", e);
+            Log.e(LOG_TAG, "Problem parsing the restaurant JSON results", e);
         }
 
         // Return the list of restaurants

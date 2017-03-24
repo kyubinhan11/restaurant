@@ -14,7 +14,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="7dp"
         >
 
         <TextView
@@ -34,12 +34,13 @@
             android:isIndicator="true"/>
 
         <TextView
+
             android:id="@+id/review_count_list_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/name_list_item"
             android:layout_toEndOf="@id/rating_list_item"
-            tools:text="133 reviews"/>
+            tools:text=" 133 reviews"/>
 
         <TextView
             android:id="@+id/price_list_item"
@@ -48,9 +49,26 @@
             android:layout_below="@id/review_count_list_item"
             tools:text="$$"/>
 
+        <TextView
+            android:id="@+id/distance_list_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/price_list_item"
+            tools:text="100m away"/>
 
 
-
+        <!-- only for FavouritesFragment -->
+        <CheckBox
+            android:id="@+id/favourtie_list_item"
+            style="?android:attr/starStyle"
+            android:layout_below="@id/name_list_item"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginRight="10dp"
+            android:checked="true"
+            />
 
     </RelativeLayout>
 
