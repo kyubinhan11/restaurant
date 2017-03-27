@@ -43,7 +43,7 @@
             tools:text=" 133 reviews"/>
 
         <TextView
-            android:id="@+id/price_list_item"
+            android:id="@+id/category_list_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/review_count_list_item"
@@ -53,7 +53,7 @@
             android:id="@+id/distance_list_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/price_list_item"
+            android:layout_below="@id/category_list_item"
             tools:text="100m away"/>
 
 

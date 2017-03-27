@@ -125,10 +125,9 @@ public class FavouritesFragment extends Fragment {
                 String reviewCountStr = " " + currRest.getReviewCount()+ " reviews";
                 reviewCountTV.setText(reviewCountStr);
 
-                // Find the 'price' TextView in the list_item.xml layout and set the price
-                TextView priceTV = (TextView) v.findViewById(R.id.price_list_item);
-                String priceStr = "Price: " + currRest.getPrice();
-                priceTV.setText(priceStr);
+                // Find the 'category' TextView in the list_item.xml layout and set the category
+                TextView categoryTV = (TextView) v.findViewById(R.id.category_list_item);
+                categoryTV.setText(currRest.getCategory());
 
                 TextView distanceTV = (TextView) v.findViewById(R.id.distance_list_item);
                 String distanceStr = Double.toString(currRest.getDistance()/1000.0) + "km away";

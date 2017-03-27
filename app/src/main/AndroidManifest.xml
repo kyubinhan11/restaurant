@@ -3,8 +3,7 @@
     package="com.example.android.yrestaurants">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- To provide caching on external storage (SD card) -->
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -23,7 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailRestaurantActivity"></activity>
+        <activity android:name=".DetailRestaurantActivity" />
+        <activity android:name=".SignInActivity" />
+        <activity android:name=".SignUpActivity"></activity>
     </application>
 
 </manifest>

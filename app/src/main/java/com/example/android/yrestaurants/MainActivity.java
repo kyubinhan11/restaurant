@@ -1,7 +1,13 @@
 package com.example.android.yrestaurants;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -12,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.Manifest;
 
@@ -22,15 +29,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String TAG = "MainActivity";
+    private static final String TAG = "MainActivity";
     private static final int SIGN_IN_REQUEST_CODE = 1;
     private static final int LOCATION_PERMISSION_REQUEST = 2;
     private DatabaseReference userDBRef;
     private String uid;
+    private ViewPager restaurantViewPager;
 
 
     @Override
@@ -39,13 +46,59 @@ public class MainActivity extends AppCompatActivity {
         // Set the content of the activity to use the activity_main.xml layout file
         setContentView(R.layout.activity_main);
 
+        // Get a reference to the ConnectivityManager to check state of network connectivity
+        ConnectivityManager connMgr = (ConnectivityManager)
+                                getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Get details on the currently active default data network
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        // If there is a network connection
+        if(networkInfo != null && networkInfo.isConnected()){
+
+            // Request the location services permission if it hasn't been granted
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        LOCATION_PERMISSION_REQUEST);
+
+            } else { // if the permission is granted already
+                startAuthentication();
+            }
+
+        } else {
+            // Otherwise, display error
+            Log.v(TAG, "no internet connection!");
+            TextView noInternetTV = (TextView) findViewById(R.id.no_internet);
+            String str = "No internet connection.";
+            noInternetTV.setText(str);
+        }
+
+
+
+        Log.v(TAG, "*** onCreate() ***");
+    }
+
+
+
+
+    /* public getter methods for the fragments */
+    public String getUid(){
+        return uid;
+    }
+
+
+
+    /* private methods */
+    private void startAuthentication(){
         // If the user hasn't signed in
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             // Start sign in/sign up activity
             startSignInOrUpActivity();
         } else {
             // User is already signed in. Therefore, display a welcome Toast
-
             Toast.makeText(this,
                     "Welcome " + FirebaseAuth.getInstance()
                             .getCurrentUser()
@@ -62,36 +115,38 @@ public class MainActivity extends AppCompatActivity {
                     .getReference(uid);
 
             // Load restaurants contents
-            displayFragments();
+            initializeFragments();
         }
 
-        // Request the location services permission
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST);
-
-        }
-
-        Log.v(TAG, "*** onCreate() ***");
     }
 
-    // public getter methods for the fragments
-    public String getUid(){
-        return uid;
+    private void startSignInOrUpActivity(){
+//        startActivityForResult(
+//                AuthUI.getInstance()
+//                        .createSignInIntentBuilder()
+//                        .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+//                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+//                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
+//                        .setIsSmartLockEnabled(false)
+//                        .build(),
+//                SIGN_IN_REQUEST_CODE
+//        );
+
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivityForResult(intent, SIGN_IN_REQUEST_CODE);
+
     }
 
-    private void displayFragments(){
+    private void initializeFragments(){
         // Find the view pager that will allow the user to swipe between fragments
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        restaurantViewPager = (ViewPager) findViewById(R.id.viewpager);
 
         // Create an adapter that knows which fragment should be shown on each page
         SimpleFPAdapter adapter = new SimpleFPAdapter(this, getSupportFragmentManager());
 
         // Set the adapter onto the view pager
-        viewPager.setAdapter(adapter);
+        restaurantViewPager.setAdapter(adapter);
 
         // Find the tab layout that shows the tabs
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -101,23 +156,52 @@ public class MainActivity extends AppCompatActivity {
         //   2. Update the view pager when a tab is selected
         //   3. Set the tab layout's tab names with the view pager's adapter's titles
         //      by calling onPageTitle()
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setupWithViewPager(restaurantViewPager);
     }
 
-    private void startSignInOrUpActivity(){
-        startActivityForResult(
-            AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                    new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-                    new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
-                .setIsSmartLockEnabled(false)
-                .build(),
-            SIGN_IN_REQUEST_CODE
-        );
+    private void isCheckLocationServiceIsOn (final Context context) {
+        LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        }
+        catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        }
+        catch(Exception ex) {}
+
+        if(!gps_enabled && !network_enabled) {
+            // notify user
+            Log.e(TAG, "no location services");
+            AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+            dialog.setMessage("Location Services Disabled. \n Please enable location services.");
+
+            dialog.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    Intent myIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    context.startActivity(myIntent);
+                    //get gps
+                }
+            });
+
+            dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+
+
+                }
+            });
+            dialog.show();
+
+        }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
@@ -137,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
                 userDBRef = FirebaseDatabase.getInstance()
                         .getReference(uid);
 
-                displayFragments();
+                initializeFragments();
             } else {
                 Toast.makeText(this, "We couldn't sign you in. Please try again later.",
                         Toast.LENGTH_LONG).show();
@@ -149,13 +233,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
             case LOCATION_PERMISSION_REQUEST: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted,
+                    // permission was granted
+                    startAuthentication();
 
                 } else {
                     // permission denied. We can't get any restaurats feed back without the location value

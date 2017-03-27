@@ -8,10 +8,11 @@ public class Restaurant implements Parcelable {
     /** Restaurant's info */
     private String mImageUrl;
     private String mNameOfRestaurant;
-    private String mPrice;
+    private String mCategory;
     private String mYId;
     private String mPhone;
     private String mUrl;
+    private String mPrice;
     private int mReviewCount;
     private int mDistance;
     private int mRating;
@@ -22,7 +23,7 @@ public class Restaurant implements Parcelable {
     }
 
     public Restaurant(String mNameOfRestaurant, String mUrl, String mImageUrl,
-                      String mPhone, boolean mIsClosed, int mRating, int mReviewCount, int mDistance, String mPrice, String mYId) {
+                      String mPhone, boolean mIsClosed, int mRating, int mReviewCount, int mDistance, String mCategory, String mYId) {
         this.mImageUrl = mImageUrl;
         this.mNameOfRestaurant = mNameOfRestaurant;
         this.mRating = mRating;
@@ -31,7 +32,7 @@ public class Restaurant implements Parcelable {
         this.mUrl = mUrl;
         this.mReviewCount = mReviewCount;
         this.mDistance = mDistance;
-        this.mPrice = mPrice;
+        this.mCategory = mCategory;
         this.mYId = mYId;
 
     }
@@ -49,8 +50,8 @@ public class Restaurant implements Parcelable {
         return mDistance;
     }
 
-    public String getPrice() {
-        return mPrice;
+    public String getCategory() {
+        return mCategory;
     }
 
     public int getRating() {
@@ -76,6 +77,8 @@ public class Restaurant implements Parcelable {
     public String getNameOfRestaurant(){
         return mNameOfRestaurant;
     }
+
+    public String getPrice(){return mPrice;}
     /* End of getters methods*/
 
     /* Setters are needed for DataSnapshot.getValue(Restaurant.class) */
@@ -111,13 +114,15 @@ public class Restaurant implements Parcelable {
         this.mDistance = mDistance;
     }
 
-    public void setPrice(String mPrice) {
-        this.mPrice = mPrice;
+    public void setCategory(String mCategory) {
+        this.mCategory = mCategory;
     }
 
     public void setYId(String mYId) {
         this.mYId = mYId;
     }
+
+    public void setPrice(String mPrice){this.mPrice = mPrice;}
     /* End of setters methods*/
 
 
@@ -133,7 +138,7 @@ public class Restaurant implements Parcelable {
         mUrl = in.readString();
         mReviewCount = in.readInt();
         mDistance = in.readInt();
-        mPrice = in.readString();
+        mCategory = in.readString();
         mYId = in.readString();
     }
 
@@ -152,7 +157,7 @@ public class Restaurant implements Parcelable {
         dest.writeString(mUrl);
         dest.writeInt(mReviewCount);
         dest.writeInt(mDistance);
-        dest.writeString(mPrice);
+        dest.writeString(mCategory);
         dest.writeString(mYId);
     }
 
