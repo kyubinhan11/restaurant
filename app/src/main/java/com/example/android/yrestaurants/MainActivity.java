@@ -81,15 +81,10 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, "*** onCreate() ***");
     }
 
-
-
-
     /* public getter methods for the fragments */
     public String getUid(){
         return uid;
     }
-
-
 
     /* private methods */
     private void startAuthentication(){
@@ -122,17 +117,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startSignInOrUpActivity(){
-//        startActivityForResult(
-//                AuthUI.getInstance()
-//                        .createSignInIntentBuilder()
-//                        .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-//                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-//                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
-//                        .setIsSmartLockEnabled(false)
-//                        .build(),
-//                SIGN_IN_REQUEST_CODE
-//        );
-
         Intent intent = new Intent(this, SignInActivity.class);
         startActivityForResult(intent, SIGN_IN_REQUEST_CODE);
 

@@ -1,25 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="10dp"
     tools:context="com.example.android.yrestaurants.DetailRestaurantActivity">
+
+
 
     <TextView
         android:id="@+id/name_detail"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        tools:text="Restaurant Name"/>
 
     <TextView
-        android:id="@+id/uid_detail"
+        android:id="@+id/distance_detail"
+        android:layout_below="@id/name_detail"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        tools:text="100m away"/>
 
     <CheckBox
         android:id="@+id/favourtie_detail"
         style="?android:attr/starStyle"
+        android:layout_below="@id/distance_detail"
+        android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-</LinearLayout>
+
+    <RatingBar
+        android:id="@+id/rating_detail"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_below="@id/name_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:isIndicator="true"
+        />
+
+    <TextView
+        android:id="@+id/review_count_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name_detail"
+        android:layout_toEndOf="@id/rating_detail"
+        tools:text=" 133 reviews"/>
+
+    <TextView
+        android:id="@+id/category_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/review_count_detail"
+        android:textSize="15sp"
+        tools:text="Category"/>
+
+    <ImageView
+        android:id="@+id/image_detail"
+        android:layout_below="@id/category_detail"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_margin="30dp"
+        android:layout_centerInParent="true"/>
+
+    <LinearLayout
+        android:id="@+id/call_detail"
+        android:layout_below="@id/image_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:src="@drawable/phone_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="Call "/>
+
+        <TextView
+            android:id="@+id/phone_number_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="20sp"
+            tools:text="240-4124-444"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

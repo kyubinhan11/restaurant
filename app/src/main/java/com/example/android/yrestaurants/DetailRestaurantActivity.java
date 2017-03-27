@@ -1,13 +1,23 @@
 package com.example.android.yrestaurants;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.Manifest;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +32,7 @@ import java.util.HashMap;
 public class DetailRestaurantActivity extends AppCompatActivity {
 
     private final String TAG = "DetailRestaurantActivit"; // maximum 23 characters allowed for TAG
+    private final static int PHONE_PERMISSION_REQUEST = 1;
     private DatabaseReference userDBRef;
     //     <restaurant ID , key which is a reference for Firebase database>
     private HashMap<String, String> ufavourRestIdAndKey = new HashMap<String, String>();
@@ -31,6 +42,18 @@ public class DetailRestaurantActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_restaurant);
+
+        // Request the location services permission if it hasn't been granted
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CALL_PHONE},
+                    PHONE_PERMISSION_REQUEST);
+
+        } else { // if the permission is granted already
+            
+        }
 
         ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -49,6 +72,46 @@ public class DetailRestaurantActivity extends AppCompatActivity {
 
         // Get the current restaurant object
         final Restaurant currRest = getIntent().getExtras().getParcelable("restaurant");
+
+        // Initialize user interfaces
+        TextView nameTV = (TextView) findViewById(R.id.name_detail);
+        nameTV.setText(currRest.getNameOfRestaurant());
+
+        TextView distanceTV = (TextView) findViewById(R.id.distance_detail);
+        String distanceStr = Double.toString(currRest.getDistance()/1000.0) + "km away";
+        distanceTV.setText(distanceStr);
+
+        RatingBar ratingBar = (RatingBar) findViewById(R.id.rating_detail);
+        ratingBar.setRating(currRest.getRating());
+
+        TextView reviewCountTV = (TextView) findViewById(R.id.review_count_detail);
+        String reviewCountStr = " " + currRest.getReviewCount()+ " reviews";
+        reviewCountTV.setText(reviewCountStr);
+
+        TextView categoryTV = (TextView) findViewById(R.id.category_detail);
+        categoryTV.setText(currRest.getCategory());
+
+        ImageView imageView = (ImageView) findViewById(R.id.image_detail);
+        // Load image, decode it to Bitmap and display Bitmap in ImageView
+        imageLoader.displayImage(currRest.getImageUrl(), imageView, options);
+
+        TextView phoneNumberTV = (TextView) findViewById(R.id.phone_number_detail);
+        phoneNumberTV.setText(currRest.getPhone());
+
+        LinearLayout callLayout = (LinearLayout) findViewById(R.id.call_detail);
+        callLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + currRest.getPhone()));
+
+                if (ContextCompat.checkSelfPermission(DetailRestaurantActivity.this, Manifest.permission.CALL_PHONE)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    startActivity(intent);
+                }
+
+
+            }
+        });
 
         // Get the current user's uid
         String uid = getIntent().getExtras().getString("uid");
@@ -75,12 +138,9 @@ public class DetailRestaurantActivity extends AppCompatActivity {
             }
         });
 
-        // Placeholders
-        TextView nameTV = (TextView) findViewById(R.id.name_detail);
-        nameTV.setText(currRest.getNameOfRestaurant());
 
-        TextView uidTV = (TextView) findViewById(R.id.uid_detail);
-        uidTV.setText(currRest.getPhone());
+
+
 
 
         // Attaching a ValueEventListener to a list of data will return

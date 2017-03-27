@@ -12,12 +12,16 @@
         android:layout_height="wrap_content"
         android:paddingTop="20dp"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:paddingRight="24dp"
+        >
 
-        <ImageView android:src="@drawable/yelp_logo"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/profile_picture_sign_up"
+            android:src="@drawable/profile_placeholder"
+            android:layout_width="72dp"
             android:layout_height="72dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center"
+            />
 
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout

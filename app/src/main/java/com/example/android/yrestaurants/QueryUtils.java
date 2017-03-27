@@ -26,10 +26,12 @@ import java.util.List;
  */
 
 public class QueryUtils {
+
     private static final String LOG_TAG = "QueryUtils";
     private static final String CLIENT_ID = "kIcyDnfdqfG7S9KvU8QHfA";
     private static final String CLIENT_SECRET = "MCpwYGVV3N8WFsfIy4Fg3wRXXBijd4nXGHkahI9z2rmZKiFZkjmXgwqpdqGJwKLi";
     private static final String GRANT_TYPE = "client_credentials";
+
     private QueryUtils() {
     }
 

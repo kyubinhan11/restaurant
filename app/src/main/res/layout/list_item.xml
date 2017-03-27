@@ -34,7 +34,6 @@
             android:isIndicator="true"/>
 
         <TextView
-
             android:id="@+id/review_count_list_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/review_count_list_item"
-            tools:text="$$"/>
+            tools:text="Category"/>
 
         <TextView
             android:id="@+id/distance_list_item"
