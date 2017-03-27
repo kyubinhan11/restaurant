@@ -52,7 +52,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                     PHONE_PERMISSION_REQUEST);
 
         } else { // if the permission is granted already
-            
+
         }
 
         ImageLoader imageLoader = ImageLoader.getInstance();
@@ -61,13 +61,6 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
-                .postProcessor(new BitmapProcessor() {
-                    // set the size of images to make them fit nicely in the list view
-                    @Override
-                    public Bitmap process(Bitmap bmp) {
-                        return Bitmap.createScaledBitmap(bmp, 500, 500, false);
-                    }
-                })
                 .build();
 
         // Get the current restaurant object
