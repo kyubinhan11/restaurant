@@ -78,7 +78,7 @@ public class RestaurantsFragment extends Fragment implements
         // Create an RestaurantAdapter, whose data source is a list of restaurants. The
         // adapter knows how to create list items for each item in the list.
         // the list will be filled after the user's location is obtained by Google Play Services (look at onConnected)
-        adapter = new RestaurantAdapter(getActivity(), ((MainActivity) getActivity()).getUid() ,new ArrayList<Restaurant>());
+        adapter = new RestaurantAdapter(getActivity(), ((MainActivity) getActivity()).getUid(), new ArrayList<Restaurant>());
 
         // Find the ListView object in the view hierarchy of the link Activity.
         // the Listview is declared in the restaurant_list.xml layout file.
@@ -127,7 +127,7 @@ public class RestaurantsFragment extends Fragment implements
                 task.execute(TOKEN_PATH);
             }
         } else {
-            // So location found in the history which is pretty rare (according to the documentation)
+            // Location wasn't found in the history which is pretty rare (according to the documentation)
             // so send a location update request
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
@@ -136,7 +136,7 @@ public class RestaurantsFragment extends Fragment implements
     // This is callback method from LocationServices.FusedLocationApi.requestLocationUpdates
     @Override
     public void onLocationChanged(Location location) {
-        Log.i(TAG, "Location has changed");
+        Log.i(TAG, "Location has updated");
         this.location = location;
 
         // Run AsyncTask one more time to get restaurant feeds after receiving the location
@@ -191,6 +191,7 @@ public class RestaurantsFragment extends Fragment implements
             this.bufferItemCount = bufferItemCount;
         }
 
+        // Will deal with it when attaching this listener to the listView
         public abstract void loadMore(int page, int totalItemsCount);
 
         @Override
@@ -221,7 +222,7 @@ public class RestaurantsFragment extends Fragment implements
         }
     }
 
-    // A AsyncTask responsible for receiving the Bearer token from Yelp API (POST Request)
+    // An AsyncTask responsible for receiving the Bearer token from Yelp API (POST Request)
     // This is 2 layers of AsyncTask: 1. Get the token 2. Get the restaurant feeds
     private class BearerTokenAsyncTask extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
@@ -239,9 +240,9 @@ public class RestaurantsFragment extends Fragment implements
                 return null;
             }
             bearerToken = QueryUtils.getBearerToken(strings[0]);
+
             // return the token to onPostExecute
             return bearerToken;
-
         }
 
         // After the token is received send a GET request to Yelp to get restaurant feeds
@@ -256,7 +257,7 @@ public class RestaurantsFragment extends Fragment implements
         }
     }
 
-    // A AsyncTask responsible for receiving restaurant feeds from Yelp API (GET Request)
+    // An AsyncTask responsible for receiving restaurant feeds from Yelp API (GET Request)
     private class RestaurantAsyncTask extends AsyncTask<String, Void, List<Restaurant>> {
         ProgressDialog progressDialog;
 

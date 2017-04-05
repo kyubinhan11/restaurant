@@ -118,7 +118,7 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
             }
         });
 
-        // Return the whole list item layout
+        // Return a list item layout
         return listItemView;
     }
 

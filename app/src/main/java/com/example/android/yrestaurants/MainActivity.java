@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
         Log.v(TAG, "*** onCreate() ***");
     }
 
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         // If the user hasn't signed in
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             // Start sign in/sign up activity
-            startSignInOrUpActivity();
+            startSignInActivity();
         } else {
             // User is already signed in. Therefore, display a welcome Toast
             Toast.makeText(this,
@@ -110,19 +109,18 @@ public class MainActivity extends AppCompatActivity {
                     .getReference(uid);
 
             // Load restaurants contents
-            initializeFragments();
+            loadFragments();
         }
 
 
     }
 
-    private void startSignInOrUpActivity(){
+    private void startSignInActivity(){
         Intent intent = new Intent(this, SignInActivity.class);
         startActivityForResult(intent, SIGN_IN_REQUEST_CODE);
-
     }
 
-    private void initializeFragments(){
+    private void loadFragments(){
         // Find the view pager that will allow the user to swipe between fragments
         restaurantViewPager = (ViewPager) findViewById(R.id.viewpager);
 
@@ -191,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                                     Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // The authentication is successful
         if(requestCode == SIGN_IN_REQUEST_CODE) {
             if(resultCode == RESULT_OK) {
                 Toast.makeText(this, "Successfully signed in. Welcome!",
@@ -205,7 +204,8 @@ public class MainActivity extends AppCompatActivity {
                 userDBRef = FirebaseDatabase.getInstance()
                         .getReference(uid);
 
-                initializeFragments();
+                // load fragments
+                loadFragments();
             } else {
                 Toast.makeText(this, "We couldn't sign you in. Please try again later.",
                         Toast.LENGTH_LONG).show();
@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
                                 .show();
 
                         // Start sign in/sign up activity again
-                        startSignInOrUpActivity();
+                        startSignInActivity();
                     }
                 });
         }
