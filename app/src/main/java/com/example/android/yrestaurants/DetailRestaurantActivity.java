@@ -119,10 +119,10 @@ public class DetailRestaurantActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Add this restaurant as a favourite in Firebase database
-                if(((CheckBox) view).isChecked()){
+                if(((CheckBox)view).isChecked()){
                     userDBRef.push().setValue(currRest);
                 }
-                // Remove this restaurant from the database by getting the key reference from the HashMap
+                // Remove this restaurant from the database with the key reference from the HashMap
                 else{
                     // ufavourRestIdAndKey is already set by userDBRef.addValueEventListener
                     String currRestKey = ufavourRestIdAndKey.get(currRest.getYId());

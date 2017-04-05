@@ -34,7 +34,6 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -146,7 +145,7 @@ public class SignUpActivity extends AppCompatActivity {
                     photoUrl = "/images/profile_placeholder.png";
                 }
 
-                // Check the email, password, and user nam are not empty
+                // Check the email, password, and user name are not empty
                 if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)|| TextUtils.isEmpty(userName)
                        || TextUtils.isEmpty(passwordConfirm)){
                     statusTextView.setText(NULL_INPUT);
@@ -194,7 +193,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                             // upload the image to the Firebase storage and
                             // update user's display name and profile photo
-                            uploadImageFromDataInMemory(userName);
+                            updateRestOfTheUserProfile(userName);
 
                             // Set result and finish this Activity
                             setResult(Activity.RESULT_OK, null);
@@ -207,7 +206,9 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     // https://firebase.google.com/docs/storage/android/upload-files?authuser=0
-    private void uploadImageFromDataInMemory(final String userName){
+    // First upload user's photo, which was selected by the user, to the Firebase Storage
+    // then update user's profile with user name and photoUrl
+    private void updateRestOfTheUserProfile(final String userName){
         // Get the current user's information reference
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -236,6 +237,9 @@ public class SignUpActivity extends AppCompatActivity {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 // http://stackoverflow.com/questions/41105586/android-firebase-tasksnapshot-method-should-only-be-accessed-within-privat
                 @SuppressWarnings("VisibleForTests") Uri userPhotoUrl = taskSnapshot.getDownloadUrl();
+
+                // After succesfully upload the user's profile image to Firebase Storage
+                // upload user's display name and photo url in Firebase
                 updateUserPictureAndName(userPhotoUrl, userName);
             }
         });
