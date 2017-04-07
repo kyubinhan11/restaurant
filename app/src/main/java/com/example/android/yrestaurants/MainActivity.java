@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         LOCATION_PERMISSION_REQUEST);
 
             } else { // if the permission is granted already
-                startAuthentication();
+                startAuthAndUploadFrags();
             }
 
         } else {
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* private methods */
-    private void startAuthentication(){
+    private void startAuthAndUploadFrags(){
         // If the user hasn't signed in
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             // Start sign in/sign up activity
@@ -173,11 +173,8 @@ public class MainActivity extends AppCompatActivity {
             });
 
             dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-
-
                 }
             });
             dialog.show();
@@ -224,8 +221,8 @@ public class MainActivity extends AppCompatActivity {
             case LOCATION_PERMISSION_REQUEST: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted
-                    startAuthentication();
+                    // permission is granted
+                    startAuthAndUploadFrags();
 
                 } else {
                     // permission denied. We can't get any restaurats feed back without the location value

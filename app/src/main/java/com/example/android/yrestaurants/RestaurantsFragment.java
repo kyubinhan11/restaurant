@@ -3,6 +3,7 @@ package com.example.android.yrestaurants;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -42,6 +44,7 @@ public class RestaurantsFragment extends Fragment implements
     private final static String RADIUS = "10000";
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private int offset = 0;
+    private String uid;
     private String bearerToken;
     private RestaurantAdapter adapter;
     private Location location;
@@ -59,7 +62,7 @@ public class RestaurantsFragment extends Fragment implements
 
         View rootView = inflater.inflate(R.layout.restaurant_list, container, false);
 
-
+        uid = ((MainActivity) getActivity()).getUid();
         // Initialize ImageLoader to use Universal Image Loader in RestaurantAdapter
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(getActivity()));
 
@@ -78,11 +81,29 @@ public class RestaurantsFragment extends Fragment implements
         // Create an RestaurantAdapter, whose data source is a list of restaurants. The
         // adapter knows how to create list items for each item in the list.
         // the list will be filled after the user's location is obtained by Google Play Services (look at onConnected)
-        adapter = new RestaurantAdapter(getActivity(), ((MainActivity) getActivity()).getUid(), new ArrayList<Restaurant>());
+        adapter = new RestaurantAdapter(getActivity(), uid, new ArrayList<Restaurant>());
 
         // Find the ListView object in the view hierarchy of the link Activity.
         // the Listview is declared in the restaurant_list.xml layout file.
         ListView RestaurantsListView = (ListView) rootView.findViewById(R.id.list);
+
+        RestaurantsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Restaurant currRest = (Restaurant) parent.getAdapter().getItem(position);
+
+                Intent intent = new Intent(getActivity(), DetailRestaurantActivity.class);
+
+                // Restaurant class implements parcelable interface
+                intent.putExtra("restaurant", currRest);
+
+                // pass the current user id to DetailRestaurantActivity
+                intent.putExtra("uid", uid);
+
+                // start DetailRestaurantActivity with the currentRest object and uid!
+                getActivity().startActivity(intent);
+            }
+        });
 
         // Set a scroll listener for an infinite scrolling list
         RestaurantsListView.setOnScrollListener(new InfiniteScrollListener(5) {
@@ -100,6 +121,7 @@ public class RestaurantsFragment extends Fragment implements
                 adapter.notifyDataSetChanged();
             }
         });
+
         RestaurantsListView.setAdapter(adapter);
 
         Log.v(TAG, "*** onCreateView() ***");

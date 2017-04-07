@@ -101,23 +101,6 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
         String distanceStr = Double.toString(currRest.getDistance()/1000.0) + "km away";
         distanceTV.setText(distanceStr);
 
-        // listItemView is a LinearLayout which is the root layout of the list_item.xml
-        listItemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, DetailRestaurantActivity.class);
-
-                // Restaurant class implements parcelable interface
-                intent.putExtra("restaurant", currRest);
-
-                // pass the current user id to DetailRestaurantActivity
-                intent.putExtra("uid", uid);
-
-                // start DetailRestaurantActivity with the currentRest object and uid!
-                context.startActivity(intent);
-            }
-        });
-
         // Return a list item layout
         return listItemView;
     }

@@ -1,6 +1,7 @@
 package com.example.android.yrestaurants;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -33,7 +35,7 @@ import java.util.HashMap;
 public class FavouritesFragment extends Fragment {
 
     private static final String TAG = "FavouritesFragment";
-    private String uId;
+    private String uid;
     private FirebaseListAdapter<Restaurant> adapter;
     private DatabaseReference userDBRef;
     private ImageLoader imageLoader;
@@ -68,11 +70,11 @@ public class FavouritesFragment extends Fragment {
                 .build();
 
         // Get the current user id from the mainActivity
-        uId = ((MainActivity) getActivity()).getUid();
+        uid = ((MainActivity) getActivity()).getUid();
 
         // Get a database reference based on the user id
         userDBRef = FirebaseDatabase.getInstance()
-                .getReference(uId);
+                .getReference(uid);
 
         // Attaching a ValueEventListener to a list of data will return
         // the entire list of data as a single DataSnapshot
@@ -98,6 +100,7 @@ public class FavouritesFragment extends Fragment {
 
         // use the same ListView as the RestaurantsFragment
         ListView RestaurantsListView = (ListView) rootView.findViewById(R.id.list);
+
         adapter = new FirebaseListAdapter<Restaurant>(getActivity(), Restaurant.class,
                 R.layout.list_item, userDBRef) {
             @Override
@@ -150,9 +153,29 @@ public class FavouritesFragment extends Fragment {
                     favouriteCB.setChecked(true);
                     }
                 });
+
+                // v is a LinearLayout which is the root layout of the list_item.xml
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(), DetailRestaurantActivity.class);
+
+                        // Restaurant class implements parcelable interface
+                        intent.putExtra("restaurant", currRest);
+
+                        // pass the current user id to DetailRestaurantActivity
+                        intent.putExtra("uid", uid);
+
+                        // start DetailRestaurantActivity with the currentRest object and uid!
+                        getActivity().startActivity(intent);
+                    }
+                });
+
             }
         };
         RestaurantsListView.setAdapter(adapter);
+
+        Log.v(TAG, "*** onCreateView() ***");
 
         return rootView;
     }
